@@ -16,14 +16,12 @@ public class DatabaseManager {
     private List<Product> products;
     private List<Order> orders;
     private List<Promotion> promotions;
-    private List<ServiceRequest> serviceRequests; // Added service requests
 
     private static final String CUSTOMERS_FILE = "src/main/resources/com/example/proiectfis2/customers.json";
     private static final String EMPLOYEES_FILE = "src/main/resources/com/example/proiectfis2/employees.json";
     private static final String PRODUCTS_FILE = "src/main/resources/com/example/proiectfis2/products.json";
     private static final String ORDERS_FILE = "src/main/resources/com/example/proiectfis2/orders.json";
     private static final String PROMOTIONS_FILE = "src/main/resources/com/example/proiectfis2/promotions.json";
-    private static final String SERVICE_REQUESTS_FILE = "src/main/resources/com/example/proiectfis2/service_requests.json"; // Added service requests file
 
     private Gson gson = new Gson();
 
@@ -33,8 +31,6 @@ public class DatabaseManager {
         this.products = loadProducts();
         this.orders = loadOrders();
         this.promotions = loadPromotions();
-        this.serviceRequests = loadServiceRequests(); // Load service requests
-        associatePromotionsWithProducts();
     }
 
     // Load methods...
@@ -89,16 +85,6 @@ public class DatabaseManager {
         }
     }
 
-    private List<ServiceRequest> loadServiceRequests() {
-        try (InputStreamReader reader = new InputStreamReader(getClass().getResourceAsStream("/com/example/proiectfis2/service_requests.json"))) {
-            Type serviceRequestListType = new TypeToken<ArrayList<ServiceRequest>>() {}.getType();
-            return gson.fromJson(reader, serviceRequestListType);
-        } catch (IOException e) {
-            e.printStackTrace();
-            return new ArrayList<>();
-        }
-    }
-
 
     private void saveCustomers() {
         try (FileWriter writer = new FileWriter(CUSTOMERS_FILE)) {
@@ -135,14 +121,6 @@ public class DatabaseManager {
     private void savePromotions() {
         try (FileWriter writer = new FileWriter(PROMOTIONS_FILE)) {
             gson.toJson(promotions, writer);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    private void saveServiceRequests() {
-        try (FileWriter writer = new FileWriter(SERVICE_REQUESTS_FILE)) {
-            gson.toJson(serviceRequests, writer);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -200,7 +178,7 @@ public class DatabaseManager {
     }
 
     public void addProduct(Product product, Employee employee) {
-        if (employee != null && employee.getRole().equals("senior")) {
+        if (employee != null && employee.getRole().equals("seller")) {
             products.add(product);
             saveProducts();
         } else {
@@ -227,7 +205,7 @@ public class DatabaseManager {
     }
 
     public void addPromotion(Promotion promotion, Employee employee) {
-        if (employee != null && employee.getRole().equals("manager")) {
+        if (employee != null && employee.getRole().equals("seller")) {
             promotions.add(promotion);
             for (Product product : promotion.getProducts()) {
                 if (!products.contains(product)) {
@@ -242,7 +220,7 @@ public class DatabaseManager {
     }
 
     public void removePromotion(Promotion promotion, Employee employee) {
-        if (employee != null && employee.getRole().equals("manager")) {
+        if (employee != null && employee.getRole().equals("seller")) {
             promotions.remove(promotion);
             savePromotions();
         } else {
@@ -266,30 +244,4 @@ public class DatabaseManager {
         return promotions;
     }
 
-    public void addServiceRequest(ServiceRequest serviceRequest) {
-        serviceRequests.add(serviceRequest);
-        saveServiceRequests();
-    }
-
-    public List<ServiceRequest> getServiceRequests() {
-        return serviceRequests;
-    }
-
-    public void updateServiceRequest(ServiceRequest serviceRequest) {
-        saveServiceRequests();
-    }
-    private void associatePromotionsWithProducts() {
-        for (Promotion promotion : promotions) {
-            List<Product> updatedProducts = new ArrayList<>();
-            for (Product promotionProduct : promotion.getProducts()) {
-                for (Product product : products) {
-                    if (product.getName().equals(promotionProduct.getName())) {
-                        updatedProducts.add(product);
-                        break;
-                    }
-                }
-            }
-            promotion.setProducts(updatedProducts);
-        }
-    }
 }

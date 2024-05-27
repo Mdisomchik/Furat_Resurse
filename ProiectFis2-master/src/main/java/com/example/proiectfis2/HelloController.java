@@ -23,16 +23,13 @@ public class HelloController {
     private ListView<Order> orderList;
 
     @FXML
-    private ListView<ServiceRequest> serviceRequestList;
-
-    @FXML
     private TextField usernameField;
 
     @FXML
     private TextField passwordField;
 
     @FXML
-    private Button loginButton, addButton, addPromoButton, removePromoButton, addToCartButton, removeFromCartButton, placeOrderButton, changeStatusButton, addEmployeeButton, viewEmployeesButton, serviceRequestButton, removeCompletedButton;
+    private Button loginButton, addButton, addPromoButton, removePromoButton, addToCartButton, removeFromCartButton, placeOrderButton, addEmployeeButton, viewEmployeesButton;
 
     private DatabaseManager databaseManager = new DatabaseManager();
     private Employee currentEmployee;
@@ -44,15 +41,12 @@ public class HelloController {
         //PENTRU A VIZIONA MAI FRUMOS PRODUSELE
         productList.setCellFactory(param -> new ProductCell());
         orderList.setCellFactory(param -> new OrderCell());
-        serviceRequestList.setCellFactory(param -> new ServiceRequestCell());
         cartList.setCellFactory(param -> new ProductCell());
 
         //incarcam datele initiale si dam update la listview.
         updateProductListView();
         updateOrderListView();
         updateCartListView();
-        updateServiceRequestListView();
-
        //setam  accesul la butoane cand pornim aplicatie. initial sunt toate false adic off.
         setButtonAccess(false, false, false, false, false, false, false, false, false, false);
     }
@@ -71,11 +65,6 @@ public class HelloController {
         cartList.setItems(FXCollections.observableArrayList(cart));
     }
 
-    private void updateServiceRequestListView() {
-        List<ServiceRequest> serviceRequests = databaseManager.getServiceRequests();
-        serviceRequestList.setItems(FXCollections.observableArrayList(serviceRequests));
-    }
-
     private void setButtonAccess(boolean addProduct, boolean addPromo, boolean removePromo, boolean addToCart, boolean removeFromCart, boolean placeOrder, boolean changeStatus, boolean addEmployee, boolean viewEmployees, boolean removeCompleted) {
         addButton.setVisible(addProduct);
         addPromoButton.setVisible(addPromo);
@@ -83,15 +72,11 @@ public class HelloController {
         addToCartButton.setVisible(addToCart);
         removeFromCartButton.setVisible(removeFromCart);
         placeOrderButton.setVisible(placeOrder);
-        changeStatusButton.setVisible(changeStatus);
         addEmployeeButton.setVisible(addEmployee);
         viewEmployeesButton.setVisible(viewEmployees);
-        serviceRequestButton.setVisible(true);
-        removeCompletedButton.setVisible(removeCompleted);
 
       //pentru a seta limitele la listview.
         orderList.setVisible(addEmployee || changeStatus || removeCompleted);
-        serviceRequestList.setVisible(addEmployee || changeStatus || removeCompleted);
     }
 
     private void showAlert(Alert.AlertType type, String title, String headerText, String contentText) {
@@ -103,7 +88,6 @@ public class HelloController {
     }
     private void setListViewVisibility(boolean isVisible) {
         orderList.setVisible(isVisible);
-        serviceRequestList.setVisible(isVisible);
     }
     @FXML
     private void handleLogin(ActionEvent event) {
@@ -123,13 +107,13 @@ public class HelloController {
             currentEmployee = databaseManager.getEmployee(username);
             showAlert(Alert.AlertType.INFORMATION,"Log In","Bine ai venit!","Angajatul este:: " + currentEmployee.getUsername());
             switch (currentEmployee.getRole()) {
-                case "manager":
+                case "admin":
                     setButtonAccess(false, true, true, true, true, true, false, true, true, true);
                     break;
-                case "senior":
+                case "seller":
                     setButtonAccess(true, false, false, true, true, true, true, false, false, true);
                     break;
-                case "junior":
+                case "user":
                     setButtonAccess(false, false, false, true, true, true, true, false, false, true);
                     break;
             }
@@ -141,7 +125,7 @@ public class HelloController {
 
     @FXML
     private void handleAddProduct(ActionEvent event) {
-        if (currentEmployee != null && "senior".equals(currentEmployee.getRole())) {
+        if (currentEmployee != null && "seller".equals(currentEmployee.getRole())) {
             ChoiceDialog<Category> categoryDialog = new ChoiceDialog<>(Category.DESKTOP_PC, Category.values());
             categoryDialog.setTitle("Adaugare produs");
             categoryDialog.setHeaderText("Alegeti categoria din care face parte produsul");
@@ -202,7 +186,7 @@ public class HelloController {
 
     @FXML
     private void handleAddPromotion(ActionEvent event) {
-        if (currentEmployee != null && "manager".equals(currentEmployee.getRole())) {
+        if (currentEmployee != null && "seller".equals(currentEmployee.getRole())) {
             List<Product> products = databaseManager.getProducts();
             ChoiceDialog<Product> productDialog = new ChoiceDialog<>(products.get(0), products);
             productDialog.setTitle("Adaugarea promotie");
@@ -237,7 +221,7 @@ public class HelloController {
 
     @FXML
     private void handleRemovePromotion(ActionEvent event) {
-        if (currentEmployee != null && "manager".equals(currentEmployee.getRole())) {
+        if (currentEmployee != null && "seller".equals(currentEmployee.getRole())) {
             List<Promotion> promotions = databaseManager.getPromotions();
             ChoiceDialog<Promotion> promoDialog = new ChoiceDialog<>(promotions.get(0), promotions);
             promoDialog.setTitle("Stergere promotie");
@@ -353,7 +337,7 @@ public class HelloController {
 
     @FXML
     private void handleAddEmployee(ActionEvent event) {
-        if (currentEmployee != null && "manager".equals(currentEmployee.getRole())) {
+        if (currentEmployee != null && "admin".equals(currentEmployee.getRole())) {
             TextInputDialog usernameDialog = new TextInputDialog();
             usernameDialog.setTitle("Adaugarea angajati");
             usernameDialog.setHeaderText("Nume angajat");
@@ -374,7 +358,7 @@ public class HelloController {
                 return;
             }
 
-            ChoiceDialog<String> roleDialog = new ChoiceDialog<>("junior", "junior", "senior");
+            ChoiceDialog<String> roleDialog = new ChoiceDialog<>( "seller");
             roleDialog.setTitle("Adaugare angajat");
             roleDialog.setHeaderText("Rol angajat");
             roleDialog.setContentText("Rol:");
@@ -399,7 +383,7 @@ public class HelloController {
     @FXML
     private void handleRemoveCompleted(ActionEvent event) {
         if (currentEmployee != null) {
-            if ("manager".equals(currentEmployee.getRole()) || "senior".equals(currentEmployee.getRole()) || "junior".equals(currentEmployee.getRole())) {
+            if ("manager".equals(currentEmployee.getRole()) || "seller".equals(currentEmployee.getRole()) || "user".equals(currentEmployee.getRole())) {
                 ObservableList<Order> items = orderList.getItems();
 
                //stergem comenziile terminate sau care au fost anulate
@@ -425,7 +409,7 @@ public class HelloController {
 
     @FXML
     private void handleViewEmployees(ActionEvent event) {
-        if (currentEmployee != null && "manager".equals(currentEmployee.getRole())) {
+        if (currentEmployee != null && "admin".equals(currentEmployee.getRole())) {
             List<Employee> employees = databaseManager.getEmployees();
             StringBuilder employeeInfo = new StringBuilder("Angajati:\n");
             for (Employee employee : employees) {
@@ -462,13 +446,6 @@ public class HelloController {
 
             String description = resultDescription.get();
             String date = resultDate.get();
-
-            ServiceRequest serviceRequest = new ServiceRequest(currentCustomer, description, date);
-            databaseManager.addServiceRequest(serviceRequest);
-            updateServiceRequestListView(); // Update the view
-            showAlert(Alert.AlertType.INFORMATION, "Cerere service", "Cerere service trimisa", "Cerere service trimisa: " + description);
-        } else {
-            showAlert(Alert.AlertType.ERROR, "Cerere service", "Permisiuni invalide", "Trebuie sa aveti cont de client pentru trimiterea unei cerere service!");
         }
     }
 }

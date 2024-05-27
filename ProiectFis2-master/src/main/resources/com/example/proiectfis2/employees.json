@@ -1,22 +1,22 @@
 [
   {
-    "username": "manager",
-    "password": "manager",
-    "role": "manager"
+    "username": "admin@email.com",
+    "password": "admin",
+    "role": "admin"
   },
   {
-    "username": "junior",
-    "password": "junior",
-    "role": "junior"
+    "username": "user",
+    "password": "user",
+    "role": "user"
   },
   {
-    "username": "senior",
-    "password": "senior",
-    "role": "senior"
+    "username": "seller",
+    "password": "seller",
+    "role": "seller"
   },
   {
-    "username": "gabi",
-    "password": "gabi",
-    "role": "manager"
+    "username": "maxim",
+    "password": "maxim",
+    "role": "admin"
   }
 ]

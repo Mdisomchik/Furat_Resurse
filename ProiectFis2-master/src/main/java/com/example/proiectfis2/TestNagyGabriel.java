@@ -81,15 +81,15 @@ class TestNagyGabriel {
         assertFalse(databaseManager.getOrders().contains(invalidOrder));
     }
 
-    @Test
-    void testAddServiceRequest() {
-        System.out.println("Testul: testAddServiceRequest a inceput");
-        ServiceRequest serviceRequest = new ServiceRequest(validCustomer, "Test Service Request", "2024-05-24");
-        int initialSize = databaseManager.getServiceRequests().size();
-        databaseManager.addServiceRequest(serviceRequest);
-        assertEquals(initialSize + 1, databaseManager.getServiceRequests().size());
-        assertTrue(databaseManager.getServiceRequests().contains(serviceRequest));
-    }
+//    @Test
+//    void testAddServiceRequest() {
+//        System.out.println("Testul: testAddServiceRequest a inceput");
+//        ServiceRequest serviceRequest = new ServiceRequest(validCustomer, "Test Service Request", "2024-05-24");
+//        int initialSize = databaseManager.getServiceRequests().size();
+//        databaseManager.addServiceRequest(serviceRequest);
+//        assertEquals(initialSize + 1, databaseManager.getServiceRequests().size());
+//        assertTrue(databaseManager.getServiceRequests().contains(serviceRequest));
+//    }
     @Test
     void testAddPromotionWithManager() {
         System.out.println("Testul: testAddPromotionWithManager a inceput");

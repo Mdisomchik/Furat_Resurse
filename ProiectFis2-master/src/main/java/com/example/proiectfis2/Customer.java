@@ -4,13 +4,11 @@ public class Customer {
     private String username;
     private String password;
     private String name;
-    private String email;
 
     public Customer(String username, String password, String name, String email) {
         this.username = username;
         this.password = password;
         this.name = name;
-        this.email = email;
     }
 
     public String getUsername() {
@@ -25,9 +23,6 @@ public class Customer {
         return name;
     }
 
-    public String getEmail() {
-        return email;
-    }
 
     public void setUsername(String username) {
         this.username = username;
@@ -41,7 +36,4 @@ public class Customer {
         this.name = name;
     }
 
-    public void setEmail(String email) {
-        this.email = email;
-    }
 }

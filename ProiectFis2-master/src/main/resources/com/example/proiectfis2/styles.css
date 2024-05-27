@@ -18,33 +18,33 @@
 }
 
 .text-field:focused {
-    -fx-border-color: #3498db;
+    -fx-border-color: #dc0d0d;
     -fx-border-width: 2px;
     -fx-prompt-text-fill: transparent;
 }
 
 /* Button Styles */
 .button {
-    -fx-background-color: #3498db;
+    -fx-background-color: #ea161d;
     -fx-text-fill: white;
     -fx-font-size: 14px;
     -fx-background-radius: 5;
     -fx-padding: 10 20;
     -fx-cursor: hand;
     -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.25), 5, 0, 0, 1);
-    -fx-border-color: #2980b9;
+    -fx-border-color: #af1342;
     -fx-border-width: 2;
     -fx-margin: 5 0;  /* Add margin between buttons */
 }
 
 .button:hover {
-    -fx-background-color: #2980b9;
-    -fx-border-color: #1f6f93;
+    -fx-background-color: #b92943;
+    -fx-border-color: #931f42;
 }
 
 .button:pressed {
-    -fx-background-color: #1f6f93;
-    -fx-border-color: #145a75;
+    -fx-background-color: #d92640;
+    -fx-border-color: #c71b7c;
     -fx-effect: innershadow(gaussian, rgba(0,0,0,0.3), 3, 0.0, 0, 2);
 }
 
@@ -79,7 +79,7 @@
 }
 
 .list-view .list-cell:filled:focused {
-    -fx-border-color: #3498db;
+    -fx-border-color: #d71348;
 }
 
 /* Specific text styles for items */
