@@ -108,10 +108,10 @@ public class HelloController {
             showAlert(Alert.AlertType.INFORMATION,"Log In","Bine ai venit!","Angajatul este:: " + currentEmployee.getUsername());
             switch (currentEmployee.getRole()) {
                 case "admin":
-                    setButtonAccess(false, true, true, true, true, true, false, true, true, true);
+                    setButtonAccess(false, false, false, true, true, true, false, true, true, true);
                     break;
                 case "seller":
-                    setButtonAccess(true, false, false, true, true, true, true, false, false, true);
+                    setButtonAccess(true, true, true, true, true, true, true, false, false, true);
                     break;
                 case "user":
                     setButtonAccess(false, false, false, true, true, true, true, false, false, true);
